@@ -1,0 +1,53 @@
+// src/data/mockTimeline.ts
+export const mockTimelineEvents = [
+    {
+        id: "EVT-01",
+        date: "2026-08-12",
+        time: "10:02",
+        type: "CALL",
+        title: "Communication",
+        description: "Rahul → Amit (Duration: 145 sec)",
+        entities: ["PER-00421", "PER-00219"],
+        case: "FIR-2026-1104",
+    },
+    {
+        id: "EVT-02",
+        date: "2026-08-12",
+        time: "11:34",
+        type: "TRANSACTION",
+        title: "Financial Transfer",
+        description: "Account A → Account B (₹50,000)",
+        entities: ["ACC-552"],
+        case: "FIR-2026-1023",
+    },
+    {
+        id: "EVT-03",
+        date: "2026-08-12",
+        time: "12:15",
+        type: "LOCATION",
+        title: "Vehicle Sighting",
+        description: "Vehicle MH12AB1234 spotted at Hinjewadi IT Junction",
+        entities: ["VEH-1234", "LOC-882"],
+        case: "FIR-2026-1104",
+    },
+    {
+        id: "EVT-04",
+        date: "2026-08-12",
+        time: "13:02",
+        type: "MEETING",
+        title: "Physical Association",
+        description: "Rahul + Amit colocated near Hinjewadi",
+        entities: ["PER-00421", "PER-00219", "LOC-882"],
+        case: "FIR-2026-1104",
+    },
+    {
+        id: "EVT-05",
+        date: "2026-08-12",
+        time: "14:18",
+        type: "CALL",
+        title: "Communication",
+        description: "Amit → Unknown Burner",
+        entities: ["PER-00219"],
+        case: "FIR-2026-1048",
+    }
+];

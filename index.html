@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIH-Demo | Intelligence Agency Tactical War Room</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Cytoscape.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+
+    <!-- Custom Corkboard & Spy Agency CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col scroll-locked">
+
+    <!-- Full-Screen Video Intro Wrapper (Fixed Container) -->
+    <div id="intro-wrapper" class="fixed inset-0 z-50 flex items-center justify-center bg-black cursor-pointer overflow-hidden">
+        <video id="intro-video" muted autoplay playsinline class="absolute inset-0 w-full h-full object-cover">
+            <source src="crime-intro-after-effects-templates-ytmp4.savetube.vip.mp4" type="video/mp4">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-cctv-camera-surveillance-of-a-corridor-41559-large.mp4" type="video/mp4">
+        </video>
+
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
+        <div class="absolute inset-0 crt-scanlines opacity-75 pointer-events-none"></div>
+
+        <div class="relative z-10 text-center pointer-events-none p-6 max-w-2xl">
+            <div class="top-secret-stamp mb-4 animate-pulse inline-block">TOP SECRET BRIEFING</div>
+            <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-white tracking-widest uppercase mb-3 drop-shadow-2xl">
+                CRIMINAL NETWORK INTELLIGENCE
+            </h1>
+            <p class="font-mono text-xs text-slate-300 mb-6 uppercase tracking-wider">
+                CAM-04 SURVEILLANCE FEED // CLASSIFIED LAW ENFORCEMENT WAR ROOM
+            </p>
+            
+            <div class="inline-flex items-center gap-3 px-5 py-2.5 bg-red-950/90 border border-red-600 rounded-full shadow-2xl text-red-400 font-mono font-bold text-xs animate-bounce">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+                <span>CLICK ANYWHERE OR WAIT TO ENTER WAR ROOM</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Page Content -->
+    <div id="main-content" class="main-content-hidden flex-1 flex flex-col">
+        
+        <!-- Header -->
+        <header class="glass-header sticky top-0 z-40">
+            <div class="evidence-strip-thin"></div>
+
+            <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-red-600 to-amber-700 border border-red-400 flex items-center justify-center font-bold text-white font-mono text-xs shadow-md shadow-red-900/60">
+                        49
+                    </div>
+                    <div class="flex items-center gap-2 font-mono">
+                        <span class="font-extrabold text-white text-sm tracking-wider uppercase">LEVIATHAN</span>
+                        <span class="text-red-500 font-bold text-xs">// 49 AGENCY</span>
+                    </div>
+
+                    <div id="active-role-badge" class="ml-3 hidden sm:flex items-center px-2.5 py-0.5 rounded-full bg-slate-900/90 border border-slate-700/80 text-[11px] font-mono">
+                        <span class="text-amber-400 font-bold">🎖️ COMMAND DIRECTOR</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <a href="#login" class="text-[11px] font-mono text-slate-400 hover:text-amber-400 font-bold transition-colors hidden md:inline-block">
+                        🔑 ROLES
+                    </a>
+
+                    <div class="relative">
+                        <button id="btn-ingest-toggle" onclick="toggleIngestMenu()" class="px-3 py-1.5 bg-gradient-to-r from-red-950 to-slate-900 hover:from-red-900 hover:to-slate-800 text-slate-100 border border-red-700/60 rounded-md text-xs font-mono font-bold transition-all shadow-lg flex items-center gap-1.5">
+                            <span class="text-red-400 font-bold">+</span>
+                            <span>INGEST INTEL</span>
+                            <span class="text-[10px] opacity-60">▾</span>
+                        </button>
+
+                        <div id="ingest-dropdown-menu" class="hidden absolute right-0 mt-2 w-52 bg-slate-900/95 border border-red-900/80 rounded-lg shadow-2xl z-50 p-1.5 backdrop-blur-md space-y-1 font-mono text-xs">
+                            <button onclick="openIngestionModal('call')" class="w-full text-left p-2 hover:bg-slate-800 rounded flex items-center gap-2 text-amber-300">
+                                <span>📞</span> <span>Call CDR Data</span>
+                            </button>
+                            <button onclick="openIngestionModal('loc')" class="w-full text-left p-2 hover:bg-slate-800 rounded flex items-center gap-2 text-blue-300">
+                                <span>📍</span> <span>Location ANPR</span>
+                            </button>
+                            <button onclick="openIngestionModal('fir')" class="w-full text-left p-2 hover:bg-slate-800 rounded flex items-center gap-2 text-emerald-300">
+                                <span>📁</span> <span>Register FIR Case</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative w-56">
+                        <input type="text" id="top-nav-search" placeholder="Search dossier, FIR..." 
+                               class="w-full bg-slate-950/80 border border-slate-800 focus:border-red-500 rounded-md px-3 py-1 text-xs font-mono text-slate-200 placeholder-slate-500 focus:outline-none transition-all">
+                        <span class="absolute right-2 top-1.5 text-[9px] font-mono text-slate-500 bg-slate-900 px-1 rounded border border-slate-800 pointer-events-none">Ctrl K</span>
+                        <div id="search-results-dropdown" class="hidden absolute top-full left-0 right-0 mt-1 bg-slate-900 border border-red-900/80 rounded-lg shadow-2xl z-50 max-h-60 overflow-y-auto"></div>
+                    </div>
+
+                    <button onclick="window.location.hash='alerts'" class="flex items-center gap-1.5 px-2.5 py-1 bg-red-950/80 hover:bg-red-900 border border-red-800/80 rounded-full text-xs font-mono font-bold text-red-300 transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                        <span>3 ANOMALIES</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workstation Layout -->
+        <div class="flex-1 flex overflow-hidden">
+            
+            <!-- Sidebar Navigation -->
+            <aside class="w-60 bg-slate-950/90 border-r border-slate-900 p-3 flex flex-col justify-between shrink-0 shadow-2xl">
+                <div>
+                    <div class="text-[10px] font-mono text-slate-500 font-bold uppercase tracking-wider mb-2 px-2 flex items-center justify-between">
+                        <span>INDEX REGISTRY</span>
+                        <span class="confidential-stamp text-[8px] py-0">CLASSIFIED</span>
+                    </div>
+
+                    <nav class="space-y-1">
+                        <a href="#login" data-view="login" class="nav-tab flex items-center justify-between px-3 py-2 rounded text-xs font-mono font-bold border transition-all text-amber-400">
+                            <span class="flex items-center gap-2"><span>00</span> ROLES</span>
+                            <span class="nav-pin-indicator hidden w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                        </a>
+                        <a href="#briefing" data-view="briefing" class="nav-tab flex items-center justify-between px-3 py-2 rounded text-xs font-mono font-bold border transition-all">
+                            <span class="flex items-center gap-2"><span>01</span> BRIEFING</span>
+                            <span class="nav-pin-indicator hidden w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                        </a>
+                        <a href="#profiles" data-view="profiles" class="nav-tab flex items-center justify-between px-3 py-2 rounded text-xs font-mono font-bold border transition-all text-emerald-400">
+                            <span class="flex items-center gap-2"><span>02</span> PROFILES</span>
+                            <span class="nav-pin-indicator hidden w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        </a>
+                        <a href="#fir-form" data-view="fir-form" class="nav-tab flex items-center justify-between px-3 py-2 rounded text-xs font-mono font-bold border transition-all text-blue-400">
+                            <span class="flex items-center gap-2"><span>03</span> FIR FORM</span>
+                            <span class="nav-pin-indicator hidden w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                        </a>
+                        <a href="#alerts" data-view="alerts" class="nav-tab flex items-center justify-between px-3 py-2 rounded text-xs font-mono font-bold border transition-all">
+                            <span class="flex items-center gap-2"><span>04</span> ALERTS</span>
+                            <span class="nav-pin-indicator hidden w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                        </a>
+                        <a href="#overview" data-view="overview" class="nav-tab flex items-center justify-between px-3 py-2 rounded text-xs font-mono font-bold border transition-all">
+                            <span class="flex items-center gap-2"><span>05</span> OVERVIEW</span>
+                            <span class="nav-pin-indicator hidden w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                        </a>
+                        <a href="#spy-flow" data-view="spy-flow" class="nav-tab flex items-center justify-between px-3 py-2 rounded text-xs font-mono font-bold border transition-all">
+                            <span class="flex items-center gap-2"><span>06</span> SPY FLOW</span>
+                            <span class="nav-pin-indicator hidden w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                        </a>
+                        <a href="#cases" data-view="cases" class="nav-tab flex items-center justify-between px-3 py-2 rounded text-xs font-mono font-bold border transition-all">
+                            <span class="flex items-center gap-2"><span>07</span> CASES</span>
+                            <span class="nav-pin-indicator hidden w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                        </a>
+                        <a href="#subjects" data-view="subjects" class="nav-tab flex items-center justify-between px-3 py-2 rounded text-xs font-mono font-bold border transition-all">
+                            <span class="flex items-center gap-2"><span>08</span> SUBJECTS</span>
+                            <span class="nav-pin-indicator hidden w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                        </a>
+                        <a href="#timeline" data-view="timeline" class="nav-tab flex items-center justify-between px-3 py-2 rounded text-xs font-mono font-bold border transition-all">
+                            <span class="flex items-center gap-2"><span>09</span> TIMELINE</span>
+                            <span class="nav-pin-indicator hidden w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                        </a>
+                        <a href="#ai-engine" data-view="ai-engine" class="nav-tab flex items-center justify-between px-3 py-2 rounded text-xs font-mono font-bold border transition-all">
+                            <span class="flex items-center gap-2"><span>10</span> AI ENGINE</span>
+                            <span class="nav-pin-indicator hidden w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="p-2.5 bg-slate-900/80 rounded-lg border border-slate-800/80 font-mono text-[11px]">
+                    <div class="text-slate-400 font-bold mb-0.5">WAR ROOM HUD</div>
+                    <div class="text-emerald-400 font-bold flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>ONLINE // AES-256</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Viewport Area -->
+            <main class="flex-1 overflow-y-auto bg-slate-950 p-6 relative">
+
+                <!-- VIEW 00: ROLE LOGINS -->
+                <section id="view-login" class="view-container hidden space-y-8 max-w-5xl mx-auto py-4">
+                    <div class="text-center space-y-2 border-b border-slate-900 pb-6">
+                        <div class="top-secret-stamp">CLASSIFIED AUTHENTICATION PORTAL</div>
+                        <h1 class="font-serif text-3xl font-bold text-white">SELECT YOUR AGENCY ROLE & PROPER LOGIN</h1>
+                        <p class="font-mono text-xs text-slate-400">Authenticate into your operational role to access Criminal Profiles, FIR Registration & War Room</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="glass-card p-6 rounded-xl flex flex-col justify-between group">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-3xl">📞</span>
+                                    <span class="confidential-stamp text-[10px]">ROLE 1</span>
+                                </div>
+                                <h3 class="font-serif text-xl font-bold text-amber-400 mb-2">1. CALL PERSON (FEEDING CALL INFO)</h3>
+                                <p class="text-xs text-slate-300 font-mono mb-4 leading-relaxed">
+                                    Call center operator portal. Ingest Call Data Records (CDR), 112 emergency logs & phone transcripts into criminal profiles.
+                                </p>
+                            </div>
+                            <button onclick="openProperLoginModal('CALL_OPERATOR')" class="w-full py-2.5 bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-700 rounded-lg font-mono font-bold text-xs transition-colors flex items-center justify-center gap-2">
+                                <span>PROPER LOGIN AS CALL OPERATOR</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-xl flex flex-col justify-between group">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-3xl">📍</span>
+                                    <span class="confidential-stamp text-[10px]">ROLE 2</span>
+                                </div>
+                                <h3 class="font-serif text-xl font-bold text-blue-400 mb-2">2. LOCATION POLICE (FEEDING GEO INFO)</h3>
+                                <p class="text-xs text-slate-300 font-mono mb-4 leading-relaxed">
+                                    Field patrol & ANPR checkpoint officer portal. Feed vehicle license plate sightings & GPS coordinates to target profiles.
+                                </p>
+                            </div>
+                            <button onclick="openProperLoginModal('LOCATION_POLICE')" class="w-full py-2.5 bg-blue-950/80 hover:bg-blue-900 text-blue-300 border border-blue-700 rounded-lg font-mono font-bold text-xs transition-colors flex items-center justify-center gap-2">
+                                <span>PROPER LOGIN AS FIELD POLICE</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-xl flex flex-col justify-between group">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-3xl">📁</span>
+                                    <span class="confidential-stamp text-[10px]">ROLE 3</span>
+                                </div>
+                                <h3 class="font-serif text-xl font-bold text-emerald-400 mb-2">3. FIR POLICE (CRIME DOSSIER DESK)</h3>
+                                <p class="text-xs text-slate-300 font-mono mb-4 leading-relaxed">
+                                    Station House Officer (SHO) portal. Register detailed FIR legal filings, suspect intake & upload optional evidence PDFs.
+                                </p>
+                            </div>
+                            <button onclick="openProperLoginModal('FIR_POLICE')" class="w-full py-2.5 bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-700 rounded-lg font-mono font-bold text-xs transition-colors flex items-center justify-center gap-2">
+                                <span>PROPER LOGIN AS FIR POLICE</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-xl flex flex-col justify-between group">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-3xl">🎖️</span>
+                                    <span class="confidential-stamp text-[10px]">ROLE 4</span>
+                                </div>
+                                <h3 class="font-serif text-xl font-bold text-red-400 mb-2">4. HIGHER AUTHORITY (ALL ACCESS)</h3>
+                                <p class="text-xs text-slate-300 font-mono mb-4 leading-relaxed">
+                                    Agency Command War Room. Full access to Criminal Profiles, GNN Spy Flow graph, AI Engine & Audit Ledger.
+                                </p>
+                            </div>
+                            <button onclick="openProperLoginModal('HIGHER_AUTHORITY')" class="w-full py-2.5 bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-700 rounded-lg font-mono font-bold text-xs transition-colors flex items-center justify-center gap-2">
+                                <span>PROPER LOGIN AS COMMAND DIRECTOR</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 02: CRIMINAL PROFILES WORKSPACE PAGE -->
+                <section id="view-profiles" class="view-container hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold text-white flex items-center gap-3">
+                                <span>CRIMINAL SUSPECT PROFILES & EVIDENCE MANAGEMENT</span>
+                                <span class="confidential-stamp text-xs">DYNAMIC INTEL</span>
+                            </h2>
+                            <p class="font-mono text-xs text-slate-400">View suspect dossiers, edit attributes, and add custom intelligence fields freely</p>
+                        </div>
+                        <button onclick="document.getElementById('modal-create-profile').classList.remove('hidden')" class="px-4 py-2 bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-700/80 rounded-lg font-mono font-bold text-xs transition-colors flex items-center gap-1.5 shadow-lg">
+                            <span>+ CREATE COMPREHENSIVE CRIMINAL RECORD</span>
+                        </button>
+                    </div>
+
+                    <div id="criminal-profiles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </section>
+
+                <!-- VIEW 03: DETAILED COMPREHENSIVE FIR REGISTRATION FORM -->
+                <section id="view-fir-form" class="view-container hidden space-y-6 max-w-4xl mx-auto">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold text-white flex items-center gap-2">
+                                <span>FIRST INFORMATION REPORT (FIR) COMPREHENSIVE REGISTRATION</span>
+                                <span class="confidential-stamp text-xs">FORM 1</span>
+                            </h2>
+                            <p class="font-mono text-xs text-slate-400">Detailed legal crime registration asking for complete information & optional evidence PDF upload</p>
+                        </div>
+                    </div>
+
+                    <form onsubmit="submitComprehensiveFIR(event)" class="glass-card p-6 rounded-xl space-y-6">
+                        <div class="space-y-3 border-b border-slate-800 pb-4">
+                            <h3 class="font-mono font-bold text-amber-400 text-xs tracking-wider uppercase">SECTION A: POLICE STATION & LEGAL SECTIONS</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
+                                <div>
+                                    <label class="block text-slate-400 mb-1">FIR NUMBER:</label>
+                                    <input type="text" id="fir-full-no" required value="FIR-2026-1402" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white font-bold">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 mb-1">POLICE STATION NAME:</label>
+                                    <input type="text" id="fir-full-station" required value="Special Cell PS, New Delhi" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 mb-1">ACTS & SECTIONS (IPC/IT):</label>
+                                    <input type="text" id="fir-full-sections" required value="IPC 420, 120B, IT Act 66D" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-amber-300">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 border-b border-slate-800 pb-4">
+                            <h3 class="font-mono font-bold text-blue-400 text-xs tracking-wider uppercase">SECTION B: COMPLAINANT INFORMATION</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
+                                <div>
+                                    <label class="block text-slate-400 mb-1">COMPLAINANT FULL NAME:</label>
+                                    <input type="text" id="fir-full-complainant" required value="Vikramaditya Rao" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 mb-1">CONTACT PHONE / AADHAAR ID:</label>
+                                    <input type="text" required value="+91 98711 00223 | AADHAAR 8819-2041-9912" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 border-b border-slate-800 pb-4">
+                            <h3 class="font-mono font-bold text-red-400 text-xs tracking-wider uppercase">SECTION C: ACCUSED / SUSPECT DETAILS</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
+                                <div>
+                                    <label class="block text-slate-400 mb-1">PRIMARY SUSPECT / ACCUSED NAME:</label>
+                                    <input type="text" id="fir-full-suspect" required value="Rahul Sharma (a.k.a. R. Sharma)" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-red-400 font-bold">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 mb-1">SUSPECT VEHICLE PLATE / PHONE / IMEI:</label>
+                                    <input type="text" value="MH12AB1234 | +91 98765 43210" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-amber-300">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 border-b border-slate-800 pb-4">
+                            <h3 class="font-mono font-bold text-emerald-400 text-xs tracking-wider uppercase">SECTION D: INCIDENT NARRATIVE & EVIDENCE</h3>
+                            <div class="space-y-3 font-mono text-xs">
+                                <div>
+                                    <label class="block text-slate-400 mb-1">OFFENSE / CASE TITLE:</label>
+                                    <input type="text" id="fir-full-title" required value="Cross-Border Wire Fraud & Dummy Logistics Syndicate" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 mb-1">DETAILED CRIME INCIDENT SUMMARY / NARRATIVE:</label>
+                                    <textarea id="fir-full-narrative" rows="3" required class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-2 text-white">Sequential wire transfers initiated through Apex Logistics moving ₹45,00,000 into unverified offshore accounts using synchronized burner phone communications.</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-mono font-bold text-amber-400 text-xs tracking-wider uppercase">SECTION E: CHARGE SHEET / EVIDENCE PDF ATTACHMENT</h3>
+                                <span class="px-2 py-0.5 text-[10px] font-mono font-bold bg-amber-950 text-amber-300 border border-amber-700 rounded">[ OPTIONAL PDF ATTACHMENT ]</span>
+                            </div>
+                            <div class="p-4 bg-slate-950 border border-dashed border-slate-700 rounded-lg text-center space-y-2">
+                                <span class="text-3xl">📄</span>
+                                <div class="text-xs font-mono text-slate-300 font-bold">Select Charge Sheet or Supporting Evidence PDF Document</div>
+                                <div class="text-[11px] font-mono text-slate-500">Accepted formats: .pdf, .docx, .png (Max 25 MB) — Not compulsory</div>
+                                <input type="file" id="fir-full-pdf" accept=".pdf,.docx,image/*" class="block w-full text-xs font-mono text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-mono file:font-bold file:bg-slate-800 file:text-amber-300 hover:file:bg-slate-700 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <div class="pt-4 flex justify-end gap-3">
+                            <button type="submit" class="w-full py-3 bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-700 rounded-lg font-mono font-bold text-sm shadow-xl transition-all flex items-center justify-center gap-2">
+                                <span>SUBMIT COMPREHENSIVE FIR DOSSIER</span>
+                                <span>→</span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- VIEW 04: BRIEFING -->
+                <section id="view-briefing" class="view-container hidden min-h-[calc(100vh-140px)] flex flex-col justify-between p-8 relative rounded-xl border border-red-950 overflow-hidden bg-slate-950">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent z-10"></div>
+                    <div class="absolute inset-0 crt-scanlines opacity-80 pointer-events-none z-20"></div>
+
+                    <div class="relative z-30 flex items-center justify-between border-b border-red-900/60 pb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="w-3 h-3 rounded-full bg-red-600 animate-ping"></span>
+                            <span class="font-mono text-xs font-bold text-red-500 tracking-widest uppercase">REC [LIVE] — CAM-04 STREAM</span>
+                        </div>
+                        <div class="font-mono text-xs text-slate-400 flex items-center gap-4">
+                            <span>FPS: 30.0</span>
+                            <span>LAT: 28.6139° N</span>
+                            <span>LONG: 77.2090° E</span>
+                        </div>
+                    </div>
+
+                    <div class="relative z-30 max-w-4xl my-8">
+                        <div class="top-secret-stamp mb-6">TOP SECRET</div>
+                        <h1 class="font-serif text-4xl lg:text-6xl font-bold text-white mb-4 tracking-tight leading-tight drop-shadow-lg">
+                            CRIMINAL NETWORK INTELLIGENCE & SYNDICATE INVESTIGATION
+                        </h1>
+                        <p class="font-mono text-sm text-slate-300 mb-8 leading-relaxed max-w-2xl">
+                            Automated multi-modal evidence ingestion, directional spy flow graph analysis, and AI anomaly detection for complex cross-community criminal syndicates.
+                        </p>
+                        <div class="flex items-center gap-4">
+                            <a href="#overview" class="px-6 py-3 bg-red-800 hover:bg-red-700 text-white font-mono font-bold text-sm rounded-lg shadow-lg shadow-red-900/50 border border-red-500 transition-all transform hover:scale-105 flex items-center gap-2">
+                                <span>OPEN DETECTIVE WAR ROOM</span>
+                                <span>→</span>
+                            </a>
+                            <a href="#profiles" class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-emerald-400 font-mono font-bold text-sm rounded-lg border border-emerald-900/60 transition-colors">
+                                VIEW CRIMINAL PROFILES
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="relative z-30 flex items-center justify-between border-t border-slate-800 pt-4 font-mono text-xs text-slate-400">
+                        <div class="flex items-center gap-2">
+                            <span class="text-amber-400">AUDIO SPECTRUM:</span>
+                            <div class="flex items-end gap-1 h-4">
+                                <span class="w-1 bg-amber-500 eq-bar-1"></span>
+                                <span class="w-1 bg-amber-500 eq-bar-2"></span>
+                                <span class="w-1 bg-amber-500 eq-bar-3"></span>
+                                <span class="w-1 bg-amber-500 eq-bar-4"></span>
+                            </div>
+                        </div>
+                        <span>SIH TACTICAL DEPLOYMENT V4.2</span>
+                    </div>
+                </section>
+
+                <!-- VIEW 04: ALERTS -->
+                <section id="view-alerts" class="view-container hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold text-white">IMMEDIATE THREAT ANOMALIES</h2>
+                            <p class="font-mono text-xs text-slate-400">AI-detected suspicious spikes in communication, movement & financial velocity</p>
+                        </div>
+                        <span class="confidential-stamp">URGENT</span>
+                    </div>
+                    <div id="alerts-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </section>
+
+                <!-- VIEW 05: OVERVIEW -->
+                <section id="view-overview" class="view-container hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold text-white flex items-center gap-3">
+                                <span>CENTRAL CRIME INVESTIGATION BOARD</span>
+                                <span class="confidential-stamp text-xs">EVIDENCE WALL</span>
+                            </h2>
+                            <p class="font-mono text-xs text-slate-400">Interactive Cytoscape red yarn graph and pinned polaroid evidence cards</p>
+                        </div>
+
+                        <div class="flex items-center gap-2 bg-slate-900 p-1 rounded-lg border border-slate-800">
+                            <span class="text-[10px] font-mono text-slate-400 font-bold px-2">POSITION:</span>
+                            <button id="btn-pos-top" onclick="setDashboardPosition('top')" class="px-3 py-1 text-xs font-mono font-bold rounded bg-red-800 text-white shadow-md border border-red-500 flex items-center gap-1">
+                                <span>📌 TOP</span>
+                            </button>
+                            <button id="btn-pos-side" onclick="setDashboardPosition('side')" class="px-3 py-1 text-xs font-mono font-bold rounded bg-slate-800 text-slate-400 hover:text-white border border-slate-700 flex items-center gap-1">
+                                <span>📌 SIDE</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="top-board-dock" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                        <div class="lg:col-span-3 corkboard-surface wood-frame rounded-xl p-4 min-h-[550px] flex flex-col justify-between relative shadow-2xl">
+                            <div class="spotlight-overlay absolute inset-0 rounded-xl"></div>
+                            <div class="relative z-10 flex items-center justify-between bg-slate-950/80 p-3 rounded-lg border border-amber-900/60 backdrop-blur-sm">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span>
+                                    <span class="font-mono text-xs font-bold text-amber-400 tracking-wider">PRIMARY EVIDENCE CORKBOARD</span>
+                                </div>
+                                <span class="text-[10px] font-mono text-slate-400">RED STRING DIRECTIONAL FLOW</span>
+                            </div>
+                            <div id="cy-overview-container" class="w-full h-[440px] relative z-10"></div>
+                        </div>
+                        <div id="side-rack-dock" class="hidden flex-col gap-4"></div>
+                    </div>
+                </section>
+
+                <!-- VIEW 06: SPY FLOW -->
+                <section id="view-spy-flow" class="view-container hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold text-white flex items-center gap-2">
+                                <span>TACTICAL SPY FLOW NETWORK</span>
+                                <span class="text-xs font-mono bg-red-950 text-red-400 border border-red-800 px-2 py-0.5 rounded">DIRECTIONAL ARROWS</span>
+                            </h2>
+                            <p class="font-mono text-xs text-slate-400">Directional financial & communication flow map with spy telemetry</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="filterSubjects('all')" data-filter="all" class="filter-tab-btn px-3 py-1.5 text-xs font-mono font-bold rounded-lg bg-red-900/80 text-white border border-red-600 shadow-md">ALL</button>
+                            <button onclick="filterSubjects('person')" data-filter="person" class="filter-tab-btn px-3 py-1.5 text-xs font-mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800">PERSONS</button>
+                            <button onclick="filterSubjects('phone')" data-filter="phone" class="filter-tab-btn px-3 py-1.5 text-xs font-mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800">PHONES</button>
+                            <button onclick="filterSubjects('flagged')" data-filter="flagged" class="filter-tab-btn px-3 py-1.5 text-xs font-mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800">FLAGGED</button>
+                        </div>
+                    </div>
+                    <div class="corkboard-surface wood-frame rounded-xl p-4 min-h-[600px] relative shadow-2xl">
+                        <div class="spotlight-overlay absolute inset-0 rounded-xl"></div>
+                        <div id="cy-spyflow-container" class="w-full h-[580px] relative z-10"></div>
+                        <div id="spy-graph-tooltip" class="hidden absolute z-30 p-3 bg-slate-900/95 border border-red-700/80 rounded-lg shadow-2xl backdrop-blur-md pointer-events-none"></div>
+                    </div>
+                </section>
+
+                <!-- VIEW 07: CASES -->
+                <section id="view-cases" class="view-container hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold text-white">ACTIVE CRIME INVESTIGATION CASES</h2>
+                            <p class="font-mono text-xs text-slate-400">Classified case dossiers currently under active law enforcement inquiry</p>
+                        </div>
+                        <span class="confidential-stamp">3 ACTIVE DOSSIERS</span>
+                    </div>
+                    <div id="cases-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </section>
+
+                <!-- VIEW 08: SUBJECTS -->
+                <section id="view-subjects" class="view-container hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold text-white">MASTER SUBJECT & ENTITY REGISTER</h2>
+                            <p class="font-mono text-xs text-slate-400">Typewriter ledger of identified suspects, burner phones, vehicles & locations</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-950 border-b border-slate-800 font-mono text-xs text-slate-400 uppercase">
+                                    <th class="p-3">ID</th>
+                                    <th class="p-3">NAME / IDENTIFIER</th>
+                                    <th class="p-3">TYPE</th>
+                                    <th class="p-3">LINKS</th>
+                                    <th class="p-3">CASES</th>
+                                    <th class="p-3">STATUS</th>
+                                    <th class="p-3">IMPORTANCE</th>
+                                    <th class="p-3 text-right">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subjects-table-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- VIEW 09: TIMELINE -->
+                <section id="view-timeline" class="view-container hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold text-white">CHRONOLOGICAL CRIME EVENT TIMELINE</h2>
+                            <p class="font-mono text-xs text-slate-400">Sequential event yarn string tracking suspect communications & movements</p>
+                        </div>
+                    </div>
+                    <div id="timeline-container" class="max-w-3xl mx-auto pt-4"></div>
+                </section>
+
+                <!-- VIEW 10: AI ENGINE -->
+                <section id="view-ai-engine" class="view-container hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold text-white">INTELLIGENCE TELEGRAPH & GRAPH AI ENGINE</h2>
+                            <p class="font-mono text-xs text-slate-400">Deep graph neural network algorithms & community detection pipelines</p>
+                        </div>
+                        <button onclick="runAIPipeline()" class="px-4 py-2 bg-red-800 hover:bg-red-700 text-white font-mono font-bold text-xs rounded-lg border border-red-500 shadow-md transition-colors">
+                            ▶ EXECUTE GRAPH AI ANALYSIS
+                        </button>
+                    </div>
+                    <div class="w-full bg-slate-900 border border-slate-800 rounded-full h-2 overflow-hidden">
+                        <div id="ai-progress-bar" class="bg-gradient-to-r from-red-600 to-amber-500 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl h-96 overflow-y-auto font-mono text-xs" id="ai-terminal-output">
+                        <div class="text-slate-500">// READY TO EXECUTE GRAPH NEURAL NETWORK ANALYTICS PIPELINE...</div>
+                    </div>
+                </section>
+
+                <!-- VIEW 11: DATA -->
+                <section id="view-data" class="view-container hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold text-white">MULTI-MODAL EVIDENCE INGESTION</h2>
+                            <p class="font-mono text-xs text-slate-400">Raw telecommunications, IP packet stream, and bank ledger records</p>
+                        </div>
+                    </div>
+                    <div id="data-ingestion-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+                </section>
+
+                <!-- VIEW 12: AUDIT -->
+                <section id="view-audit" class="view-container hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold text-white">CHAIN OF CUSTODY & AUDIT LEDGER</h2>
+                            <p class="font-mono text-xs text-slate-400">Immutable security logs for all agent dossier accesses & evidence exports</p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-950 border-b border-slate-800 font-mono text-xs text-slate-400 uppercase">
+                                    <th class="p-3">TIMESTAMP</th>
+                                    <th class="p-3">AGENT / SYSTEM</th>
+                                    <th class="p-3">ACTION</th>
+                                    <th class="p-3">TARGET OBJECT</th>
+                                    <th class="p-3">VERIFICATION</th>
+                                </tr>
+                            </thead>
+                            <tbody id="audit-table-body"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-slate-900 border-t border-slate-800/80 py-3 px-6 text-center text-xs font-mono text-slate-500 flex items-center justify-between">
+            <div>SIH TACTICAL DEPLOYMENT // ALL RIGHTS RESERVED © 2026</div>
+            <div class="flex items-center gap-4">
+                <span>ENCRYPTION: AES-256</span>
+                <span class="text-emerald-400 font-bold">STATUS: SECURE</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- PROPER OFFICER LOGIN MODAL -->
+    <div id="modal-proper-login" class="hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-red-800 rounded-xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 id="login-modal-title" class="font-mono font-bold text-amber-400 text-sm uppercase">PROPER OFFICER LOGIN</h3>
+                <button onclick="document.getElementById('modal-proper-login').classList.add('hidden')" class="text-slate-400 hover:text-white font-mono text-sm">✕</button>
+            </div>
+            <form onsubmit="submitProperLogin(event)" class="space-y-3 font-mono text-xs">
+                <div>
+                    <label class="block text-slate-400 mb-1">OFFICER / BADGE ID:</label>
+                    <input type="text" id="login-badge-id" required value="OFF-88192" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white font-bold">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">STATION UNIT / DEPARTMENT:</label>
+                    <input type="text" id="login-unit-name" required value="Delhi Cyber Crime Division" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">SECURITY PASSCODE / ACCESS KEY:</label>
+                    <input type="password" required value="••••••••" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-amber-300">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="document.getElementById('modal-proper-login').classList.add('hidden')" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded">CANCEL</button>
+                    <button type="submit" class="px-4 py-2 bg-red-900 hover:bg-red-800 text-white border border-red-700 rounded font-bold">AUTHENTICATE & ENTER</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- COMPREHENSIVE CREATE NEW CRIMINAL RECORD MODAL (WITH CO-SUSPECTS) -->
+    <div id="modal-create-profile" class="hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-slate-900 border border-emerald-800 rounded-xl p-6 max-w-2xl w-full shadow-2xl space-y-4 my-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-mono font-bold text-emerald-400 text-sm">👤 CREATE COMPREHENSIVE CRIMINAL RECORD & CO-SUSPECTS</h3>
+                <button onclick="document.getElementById('modal-create-profile').classList.add('hidden')" class="text-slate-400 hover:text-white font-mono text-sm">✕</button>
+            </div>
+            
+            <form onsubmit="createNewCriminalProfile(event)" class="space-y-4 font-mono text-xs">
+                
+                <!-- Section 1: Primary Suspect Personal Info -->
+                <div class="space-y-2 border-b border-slate-800 pb-3">
+                    <h4 class="font-bold text-amber-400 uppercase text-[11px]">SECTION 1: PRIMARY SUSPECT IDENTIFICATION</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-slate-400 mb-1">PRIMARY SUSPECT NAME:</label>
+                            <input type="text" id="new-suspect-name" required value="Karan Malhotra" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">KNOWN ALIASES / MONIKERS:</label>
+                            <input type="text" id="new-suspect-aliases" required value="K. Malhotra, The Ghost" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-amber-300">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">AGE & GENDER:</label>
+                            <input type="text" id="new-suspect-age-gender" required value="34 Yrs / Male" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">PASSPORT / AADHAAR ID:</label>
+                            <input type="text" id="new-suspect-idproof" required value="AADHAAR 9912-4012-8819" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-slate-400 mb-1">PRIMARY HIDEOUT / TERRITORY ADDRESS:</label>
+                            <input type="text" id="new-suspect-location" required value="Gurugram Sector 29 Hub, Haryana" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Crime M.O. & Identifiers -->
+                <div class="space-y-2 border-b border-slate-800 pb-3">
+                    <h4 class="font-bold text-red-400 uppercase text-[11px]">SECTION 2: CRIME M.O. & PHYSICAL IDENTIFIERS</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-slate-400 mb-1">GANG / SYNDICATE AFFILIATION:</label>
+                            <input type="text" id="new-suspect-gang" value="Shadow Syndicate Network" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">M.O. CRIME SPECIALIZATION:</label>
+                            <input type="text" id="new-suspect-crime-type" required value="Cyber Wire Fraud & Burner SIM Ingress" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-amber-300">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">TATTOOS / PHYSICAL MARKS:</label>
+                            <input type="text" id="new-suspect-marks" value="Dragon tattoo on left forearm" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">ANOMALY RISK SCORE (0-100):</label>
+                            <input type="number" id="new-suspect-risk" min="0" max="100" required value="92" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-red-400 font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">PRIMARY PHONE / BURNER SIM:</label>
+                            <input type="text" id="new-suspect-phone" value="+91 98991 22334" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 mb-1">VEHICLE PLATE & MAKE:</label>
+                            <input type="text" id="new-suspect-vehicle" value="HR26AB9988 (Black Sedan)" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: LINKED CO-SUSPECTS & ASSOCIATES -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-emerald-400 uppercase text-[11px]">SECTION 3: LINKED CO-SUSPECTS & ACCOMPLICES</h4>
+                        <button type="button" onclick="addCoSuspectRow()" class="px-2 py-1 bg-emerald-950 text-emerald-300 border border-emerald-700 rounded text-[11px] font-bold">
+                            + ADD CO-SUSPECT
+                        </button>
+                    </div>
+
+                    <div id="co-suspects-input-list" class="space-y-2">
+                        <div class="co-suspect-row flex items-center gap-2 bg-slate-950 p-2 rounded border border-slate-800">
+                            <input type="text" placeholder="Co-Suspect Name" required value="Vicky Malhotra" class="co-name w-1/3 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-white">
+                            <input type="text" placeholder="Relationship / Role" required value="Financial Handler / Escrow Driver" class="co-role w-1/3 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-amber-300">
+                            <input type="text" placeholder="Contact / Vehicle Plate" value="+91 98711 55667" class="co-contact w-1/3 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs text-slate-300">
+                            <button type="button" onclick="this.parentElement.remove()" class="text-red-400 font-bold text-xs px-2 hover:text-red-300">✕</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Action Buttons -->
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="document.getElementById('modal-create-profile').classList.add('hidden')" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded">CANCEL</button>
+                    <button type="submit" class="px-5 py-2 bg-emerald-900 hover:bg-emerald-800 text-emerald-200 border border-emerald-700 rounded font-bold">
+                        SAVE COMPREHENSIVE RECORD & LINK SUSPECTS
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- ROLE 1 MODAL -->
+    <div id="modal-call-feed" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-amber-800 rounded-xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-mono font-bold text-amber-400 text-sm">📞 ROLE 1: CALL DATA FEED INTAKE</h3>
+                <button onclick="document.getElementById('modal-call-feed').classList.add('hidden')" class="text-slate-400 hover:text-white font-mono text-sm">✕</button>
+            </div>
+            <form onsubmit="submitCallPersonFeed(event)" class="space-y-3 font-mono text-xs">
+                <div>
+                    <label class="block text-slate-400 mb-1">CALLER NAME / ALIAS:</label>
+                    <input type="text" id="call-caller-name" required value="Suresh Verma" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">TARGET PHONE NUMBER:</label>
+                    <input type="text" id="call-phone-no" required value="+91 98112 33445" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">EMERGENCY CALL TRANSCRIPT / NOTES:</label>
+                    <textarea id="call-transcript" rows="3" required class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">Caller reported suspicious cash handoff near Lajpat Nagar metro station.</textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="document.getElementById('modal-call-feed').classList.add('hidden')" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded">CANCEL</button>
+                    <button type="submit" class="px-4 py-1.5 bg-amber-900 text-amber-200 border border-amber-700 rounded font-bold">SUBMIT CALL FEED</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ROLE 2 MODAL -->
+    <div id="modal-loc-feed" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-blue-800 rounded-xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-mono font-bold text-blue-400 text-sm">📍 ROLE 2: FIELD ANPR LOCATION SIGHTING</h3>
+                <button onclick="document.getElementById('modal-loc-feed').classList.add('hidden')" class="text-slate-400 hover:text-white font-mono text-sm">✕</button>
+            </div>
+            <form onsubmit="submitLocationPoliceFeed(event)" class="space-y-3 font-mono text-xs">
+                <div>
+                    <label class="block text-slate-400 mb-1">VEHICLE LICENSE PLATE (ANPR):</label>
+                    <input type="text" id="loc-vehicle-no" required value="DL01XY9988" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">CHECKPOINT / LANDMARK LOCATION:</label>
+                    <input type="text" id="loc-landmark" required value="Dhaula Kuan Checkpoint" class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-white">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="document.getElementById('modal-loc-feed').classList.add('hidden')" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded">CANCEL</button>
+                    <button type="submit" class="px-4 py-1.5 bg-blue-900 text-blue-200 border border-blue-700 rounded font-bold">SUBMIT LOCATION FEED</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confidential Entity Dossier Drawer -->
+    <div id="entity-drawer-backdrop" class="hidden drawer-backdrop fixed inset-0 z-50 flex justify-end">
+        <div id="entity-drawer-panel" class="drawer-panel w-full max-w-lg bg-slate-900 border-l border-amber-900/80 h-full p-6 flex flex-col justify-between shadow-2xl overflow-y-auto">
+            <div>
+                <div class="flex items-start justify-between border-b border-slate-800 pb-4 mb-4">
+                    <div>
+                        <span id="drawer-entity-id" class="font-mono text-xs font-bold text-red-500 bg-red-950 px-2 py-0.5 border border-red-800 rounded">PER-00421</span>
+                        <h2 id="drawer-entity-name" class="font-serif text-2xl font-bold text-white mt-1">Rahul Sharma</h2>
+                    </div>
+                    <button onclick="closeEntityDrawer()" class="p-2 text-slate-400 hover:text-white font-mono text-lg font-bold">✕</button>
+                </div>
+                <div class="grid grid-cols-2 gap-3 mb-6 font-mono text-xs bg-slate-950 p-3 rounded-lg border border-slate-800">
+                    <div>TYPE: <strong id="drawer-entity-type" class="text-amber-400">PERSON</strong></div>
+                    <div>STATUS: <strong id="drawer-entity-status" class="text-red-400">FLAGGED</strong></div>
+                    <div>CONNECTIONS: <strong id="drawer-entity-connections" class="text-white">43</strong></div>
+                    <div>CASES: <strong id="drawer-entity-cases" class="text-white">6</strong></div>
+                    <div>IMPORTANCE: <strong id="drawer-entity-importance" class="text-red-400">HIGH</strong></div>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="font-mono font-bold text-xs text-amber-500 uppercase">CLASSIFIED DOSSIER SUMMARY</h4>
+                    <p class="text-xs text-slate-300 font-mono leading-relaxed bg-slate-950/60 p-3 rounded-lg border border-slate-800">
+                        Primary bridge node identified connecting community C-01 with C-BRIDGE. High betweenness centrality (0.91) indicates critical role in cross-syndicate logistics.
+                    </p>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-4 flex items-center justify-between">
+                <span class="confidential-stamp text-[10px]">RESTRICTED</span>
+                <button onclick="closeEntityDrawer()" class="px-4 py-2 bg-red-900 hover:bg-red-800 text-white font-mono font-bold text-xs rounded-lg border border-red-700">
+                    CLOSE DOSSIER
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application JavaScript Modules -->
+    <script src="js/data.js"></script>
+    <script src="js/graph.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
